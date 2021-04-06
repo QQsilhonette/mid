@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.tuya.hardware.symphony.dtlog.core.mapper.TLogEsSearchFieldMapper">
+    <resultMap id="BaseResultMap" type="com.tuya.hardware.symphony.dtlog.core.dataobject.TLogEsSearchFieldDO">
+        <!--@mbg.generated-->
+        <id column="id" jdbcType="BIGINT" property="id"/>
+        <result column="es_field_name" jdbcType="VARCHAR" property="esFieldName"/>
+        <result column="es_field_type" jdbcType="VARCHAR" property="esFieldType"/>
+        <result column="is_delete" jdbcType="BIGINT" property="isDelete"/>
+        <result column="gmt_create" jdbcType="BIGINT" property="gmtCreate"/>
+        <result column="gmt_modified" jdbcType="BIGINT" property="gmtModified"/>
+    </resultMap>
+
+    <sql id="baseColumn">
+        id, es_field_name, es_field_type,
+        is_delete, gmt_create, gmt_modified
+    </sql>
+
+    <select id="queryAllEsField" resultMap="BaseResultMap">
+        select
+        <include refid="baseColumn"/>
+        from t_log_es_search_field
+        where is_delete=0
+    </select>
+</mapper>

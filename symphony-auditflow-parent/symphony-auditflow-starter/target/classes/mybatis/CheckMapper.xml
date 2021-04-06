@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.tuya.hardware.symphony.auditflow.infrastructure.mapper.CheckMapper">
+    <resultMap id="BaseResultMap" type="com.tuya.hardware.symphony.auditflow.infrastructure.dataobject.CheckDO">
+        <!--@mbg.generated-->
+        <id column="id" jdbcType="BIGINT" property="id"/>
+        <result column="ref_type" jdbcType="VARCHAR" property="refType"/>
+        <result column="ref_id" jdbcType="BIGINT" property="refId"/>
+        <result column="check_key" jdbcType="VARCHAR" property="checkKey"/>
+        <result column="check_value" jdbcType="TINYINT" property="checkValue"/>
+        <result column="is_delete" jdbcType="BIGINT" property="isDelete"/>
+        <result column="gmt_create" jdbcType="BIGINT" property="gmtCreate"/>
+        <result column="gmt_modified" jdbcType="BIGINT" property="gmtModified"/>
+    </resultMap>
+
+    <sql id="base-column">
+        id, ref_type, ref_id, check_key, check_value, is_delete, gmt_create, gmt_modified
+  </sql>
+
+    <insert id="insert" parameterType="com.tuya.hardware.symphony.auditflow.infrastructure.dataobject.CheckDO">
+        <!--@mbg.generated-->
+        insert into t_check (id, ref_type, ref_id,
+        check_key, check_value,
+        gmt_create, gmt_modified)
+        values (#{id,jdbcType=BIGINT}, #{refType,jdbcType=VARCHAR}, #{refId,jdbcType=BIGINT},
+        #{checkKey,jdbcType=VARCHAR}, #{checkValue,jdbcType=VARCHAR},
+        ${@java.lang.System@currentTimeMillis()}, ${@java.lang.System@currentTimeMillis()})
+    </insert>
+
+    <update id="updateByPrimaryKey" parameterType="com.tuya.hardware.symphony.auditflow.infrastructure.dataobject.CheckDO">
+        <!--@mbg.generated-->
+        update t_check set
+        <if test="refType != null">
+            ref_type = #{refType,jdbcType=VARCHAR},
+        </if>
+        <if test="refId != null">
+            ref_id = #{refId,jdbcType=BIGINT},
+        </if>
+        <if test="checkKey != null">
+            check_key = #{checkKey,jdbcType=VARCHAR},
+        </if>
+        <if test="checkValue != null">
+            check_value = #{checkValue,jdbcType=TINYINT},
+        </if>
+        gmt_modified = ${@java.lang.System@currentTimeMillis()}
+        where id = #{id,jdbcType=BIGINT}
+    </update>
+
+    <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+        <!--@mbg.generated-->
+        select
+        <include refid="base-column"></include>
+        from t_check
+        where id = #{id,jdbcType=BIGINT}
+    </select>
+
+    <select id="getByRefIdAndRefType" parameterType="map" resultMap="BaseResultMap">
+        select
+        <include refid="base-column"></include>
+        from t_check
+        where ref_type = #{refType} and ref_id = #{refId} and is_delete = 0
+    </select>
+
+    <select id="getByRefAndCheckKey" parameterType="map" resultMap="BaseResultMap">
+        select
+        <include refid="base-column"></include>
+        from t_check
+        where ref_type = #{refType} and ref_id = #{refId} and check_key = #{checkKey} and is_delete = 0
+    </select>
+
+    <update id="updateValByRefAndKey" parameterType="map">
+    update t_check set
+      check_value = #{checkValue},
+      gmt_modified = ${@java.lang.System@currentTimeMillis()}
+    where ref_id = #{refId}
+    and ref_type = #{refType}
+    and check_key = #{checkKey}
+    and is_delete = 0
+  </update>
+
+    <update id="updateValByRefAndCheckKeys" parameterType="map">
+        update t_check set
+        check_value = #{checkValue},
+        gmt_modified = ${@java.lang.System@currentTimeMillis()}
+        where ref_id = #{refId}
+        and ref_type = #{refType}
+        and check_key in
+        <foreach collection="checkKeys" item="item" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+        and is_delete = 0
+    </update>
+
+</mapper>

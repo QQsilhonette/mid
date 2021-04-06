@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.tuya.hardware.symphony.auditflow.infrastructure.mapper.AuditMapper">
+    <resultMap id="BaseResultMap" type="com.tuya.hardware.symphony.auditflow.infrastructure.dataobject.AuditDO">
+        <!--@mbg.generated-->
+        <id column="id" jdbcType="BIGINT" property="id"/>
+        <result column="ref_type" jdbcType="VARCHAR" property="refType"/>
+        <result column="ref_id" jdbcType="BIGINT" property="refId"/>
+        <result column="trace_id" jdbcType="VARCHAR" property="traceId"/>
+        <result column="audit_type" jdbcType="VARCHAR" property="auditType"/>
+        <result column="audit_status" jdbcType="VARCHAR" property="auditStatus"/>
+        <result column="audit_user" jdbcType="VARCHAR" property="auditUser"/>
+        <result column="submit_user" jdbcType="VARCHAR" property="submitUser"/>
+        <result column="is_delete" jdbcType="BIGINT" property="isDelete"/>
+        <result column="gmt_create" jdbcType="BIGINT" property="gmtCreate"/>
+        <result column="gmt_modified" jdbcType="BIGINT" property="gmtModified"/>
+    </resultMap>
+
+    <sql id="base-column">
+        id, ref_type, ref_id, trace_id, audit_type, audit_status, audit_user, submit_user, is_delete,
+    gmt_create, gmt_modified
+  </sql>
+
+    <sql id="set">
+        <if test="id != null">
+            id = #{id},
+        </if>
+        <if test="refType != null">
+            ref_type = #{refType},
+        </if>
+        <if test="refId != null">
+            ref_id = #{refId},
+        </if>
+        <if test="traceId != null">
+            trace_id = #{traceId},
+        </if>
+        <if test="auditType != null">
+            audit_type = #{auditType},
+        </if>
+        <if test="auditStatus != null">
+            audit_status = #{auditStatus},
+        </if>
+        <if test="auditUser != null">
+            audit_user = #{auditUser},
+        </if>
+        <if test="submitUser != null">
+            submit_user = #{submitUser},
+        </if>
+        <if test="gmtCreate != null">
+            gmt_create = #{gmtCreate},
+        </if>
+        gmt_modified = ${@java.lang.System@currentTimeMillis()}
+    </sql>
+
+    <insert id="insert" parameterType="com.tuya.hardware.symphony.auditflow.infrastructure.dataobject.AuditDO">
+        insert into t_audit
+        <set>
+            <include refid="set"/>
+        </set>
+    </insert>
+
+    <update id="updateByPrimaryKey" parameterType="com.tuya.hardware.symphony.auditflow.infrastructure.dataobject.AuditDO">
+        <!--@mbg.generated-->
+        update t_audit set
+        <if test="refType != null">
+            ref_type = #{refType,jdbcType=VARCHAR},
+        </if>
+        <if test="refId != null">
+            ref_id = #{refId,jdbcType=BIGINT},
+        </if>
+        <if test="traceId != null">
+            trace_id = #{traceId,jdbcType=VARCHAR},
+        </if>
+        <if test="auditType != null">
+            audit_type = #{auditType,jdbcType=VARCHAR},
+        </if>
+        <if test="auditStatus != null">
+            audit_status = #{auditStatus,jdbcType=VARCHAR},
+        </if>
+        <if test="auditUser != null">
+            audit_user = #{auditUser,jdbcType=VARCHAR},
+        </if>
+        <if test="submitUser != null">
+            submit_user = #{submitUser,jdbcType=VARCHAR},
+        </if>
+        gmt_modified = ${@java.lang.System@currentTimeMillis()}
+        where id = #{id,jdbcType=BIGINT}
+    </update>
+
+    <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+        <!--@mbg.generated-->
+        select
+        <include refid="base-column"/>
+        from t_audit
+        where id = #{id,jdbcType=BIGINT}
+    </select>
+
+    <select id="getByRefAndType" parameterType="map" resultMap="BaseResultMap">
+        <!--@mbg.generated-->
+        select
+        <include refid="base-column"/>
+        from t_audit
+        where ref_type = #{refType} and ref_id = #{refId} and audit_type = #{auditType} and is_delete = 0
+    </select>
+
+    <update id="updateStatusByRefAndType" parameterType="map">
+        update t_audit set
+        audit_status = #{auditStatus,jdbcType=VARCHAR},
+        gmt_modified = ${@java.lang.System@currentTimeMillis()}
+        where ref_type = #{refType} and ref_id = #{refId} and audit_type = #{auditType} and is_delete = 0
+    </update>
+
+    <update id="deleteByRefAndType" parameterType="map">
+        update t_audit set
+        is_delete = id,
+        gmt_modified = ${@java.lang.System@currentTimeMillis()}
+        where ref_type = #{refType} and ref_id = #{refId} and audit_type = #{auditType} and is_delete = 0
+    </update>
+
+    <update id="updateStatusByTraceId" parameterType="map">
+        update t_audit set
+        audit_status = #{auditStatus},
+        gmt_modified = ${@java.lang.System@currentTimeMillis()}
+        where trace_id = #{traceId} and is_delete = 0
+    </update>
+
+    <update id="deleteByTraceId" parameterType="map">
+        update t_audit set
+        is_delete = id,
+        gmt_modified = ${@java.lang.System@currentTimeMillis()}
+        where trace_id = #{traceId} and is_delete = 0
+    </update>
+
+    <select id="getByTraceId" parameterType="map" resultMap="BaseResultMap">
+        <!--@mbg.generated-->
+        select
+        <include refid="base-column"/>
+        from t_audit
+        where trace_id = #{traceId} and is_delete = 0
+    </select>
+</mapper>

@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.tuya.hardware.symphony.whitelist.infrastructure.mapper.EmbeddedDataWhitelistMapper">
+    <resultMap id="BaseResultMap" type="com.tuya.hardware.symphony.whitelist.infrastructure.dataobject.EmbeddedDataWhitelistDO">
+        <!--@mbg.generated-->
+        <id column="id" jdbcType="BIGINT" property="id"/>
+        <result column="ref_type" jdbcType="VARCHAR" property="refType"/>
+        <result column="type" jdbcType="TINYINT" property="type"/>
+        <result column="ref_id" jdbcType="BIGINT" property="refId"/>
+        <result column="ref_value" jdbcType="VARCHAR" property="refValue"/>
+        <result column="is_delete" jdbcType="BIGINT" property="isDelete"/>
+        <result column="modifier" jdbcType="VARCHAR" property="modifier"/>
+        <result column="gmt_create" jdbcType="BIGINT" property="gmtCreate"/>
+        <result column="gmt_modified" jdbcType="BIGINT" property="gmtModified"/>
+    </resultMap>
+
+    <sql id="base-column">
+        id, `type`, ref_id, ref_type, ref_value, is_delete, modifier, gmt_create, gmt_modified
+  </sql>
+
+    <insert id="insert" parameterType="com.tuya.hardware.symphony.whitelist.infrastructure.dataobject.EmbeddedDataWhitelistDO">
+    insert into t_embedded_data_whitelist set
+      id = #{id,jdbcType=BIGINT},
+      ref_type=#{refType,jdbcType=VARCHAR},
+      `type` = #{type,jdbcType=TINYINT},
+      ref_id = #{refId,jdbcType=BIGINT},
+      ref_value = #{refValue,jdbcType=VARCHAR},
+      modifier = #{modifier,jdbcType=VARCHAR},
+      gmt_create = ${@java.lang.System@currentTimeMillis()},
+      gmt_modified = ${@java.lang.System@currentTimeMillis()}
+  </insert>
+
+    <select id="getByRefAndValueAndType" resultMap="BaseResultMap" parameterType="map">
+        select
+        <include refid="base-column"/>
+        from t_embedded_data_whitelist
+        where `ref_type` = #{refType} and
+              `ref_id` = #{refId} and
+              `ref_value` = #{refValue} and
+              `type` = #{type} and
+              is_delete = 0
+    </select>
+
+    <select id="getByRef" resultMap="BaseResultMap" parameterType="map">
+        select
+        <include refid="base-column"/>
+        from t_embedded_data_whitelist
+        where `ref_type` = #{refType} and
+              `ref_id` = #{refId} and
+              is_delete = 0
+    </select>
+
+    <select id="getByRefs" resultMap="BaseResultMap" parameterType="map">
+        select
+        <include refid="base-column"/>
+        from t_embedded_data_whitelist
+        where `ref_type` = #{refType} and
+        `ref_id` in
+        <foreach collection="refIds" item="refId" open="(" separator="," close=")">
+            #{ refId }
+        </foreach>
+         and
+        is_delete = 0
+    </select>
+
+    <update id="deleteById">
+    update t_embedded_data_whitelist set is_delete = id,gmt_modified=${@java.lang.System@currentTimeMillis()} where
+    id=#{id}
+  </update>
+
+    <select id="queryById" resultMap="BaseResultMap">
+        select
+        <include refid="base-column"/>
+        from t_embedded_data_whitelist
+        where `id` = #{id} and is_delete=0
+    </select>
+</mapper>

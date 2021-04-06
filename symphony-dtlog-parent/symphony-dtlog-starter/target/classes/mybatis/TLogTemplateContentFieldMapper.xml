@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.tuya.hardware.symphony.dtlog.core.mapper.TLogTemplateContentFieldMapper">
+    <resultMap id="BaseResultMap" type="com.tuya.hardware.symphony.dtlog.core.dataobject.TLogTemplateContentFieldDO">
+        <!--@mbg.generated-->
+        <id column="id" jdbcType="BIGINT" property="id"/>
+        <result column="template_id" jdbcType="BIGINT" property="templateId"/>
+        <result column="field_name" jdbcType="VARCHAR" property="fieldName"/>
+        <result column="field_key" jdbcType="VARCHAR" property="fieldKey"/>
+        <result column="is_delete" jdbcType="BIGINT" property="isDelete"/>
+        <result column="gmt_create" jdbcType="BIGINT" property="gmtCreate"/>
+        <result column="gmt_modified" jdbcType="BIGINT" property="gmtModified"/>
+    </resultMap>
+    <sql id="baseColumn">
+        id, template_id, field_name,
+        field_key, is_delete, gmt_create,
+        gmt_modified
+    </sql>
+
+    <select id="queryByTemplateId" resultMap="BaseResultMap">
+        select
+        <include refid="baseColumn"/>
+        from t_log_template_content_field where template_id=#{templateId} and is_delete=0
+    </select>
+</mapper>
